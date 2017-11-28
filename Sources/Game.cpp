@@ -17,6 +17,8 @@ Vector2 bulletPos;      //!< 弾の位置
 Rect    targetRect;     //!< ターゲットの矩形
 int     score;          //!< スコア
 
+bool    canFlag;        //!< 砲台の移動方向フラグ
+
 
 // ゲーム開始時に呼ばれる関数です。
 void Start()
@@ -52,6 +54,19 @@ void Update()
             bulletPos.x = -999; // 弾を発射可能な状態に戻す
         }
     }
+    
+    // 砲台の移動
+    if(canFlag) {
+        cannonPos.y -= 50 * Time::deltaTime;
+        if(cannonPos.y <= -150) {
+            canFlag = false;
+        }
+    } else {
+        cannonPos.y += 50 * Time::deltaTime;
+        if(cannonPos.y >= -70) {
+            canFlag = true;
+        }
+    }
 
     // 背景の描画
     Clear(Color::cyan);
@@ -64,7 +79,7 @@ void Update()
     if (bulletPos.x > -999) {
         DrawImage("bullet.png", bulletPos);
     }
-
+    
     // 砲台の描画
     FillRect(Rect(cannonPos.x-10, -140, 20, 100), Color::blue);
     DrawImage("cannon.png", cannonPos);
